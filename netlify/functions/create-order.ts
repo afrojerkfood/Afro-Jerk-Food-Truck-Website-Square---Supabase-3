@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions';
-import { Client, Environment } from 'square';
+import { ApiError, Client, Environment } from 'square';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -42,9 +42,9 @@ export const handler: Handler = async (event) => {
       order: {
         locationId: process.env.SQUARE_LOCATION_ID!,
         lineItems: order.items.map((item: any) => ({
-          catalogObjectId: item.menuItem.square_variation_id,
+          catalogVariationId: item.menuItem.square_variation_id,
           quantity: item.quantity.toString(),
-          basePriceMoneyDetails: {
+          basePriceMoney: {
             amount: Math.round(item.menuItem.price * 100), // Convert to cents
             currency: 'USD'
           }
@@ -62,6 +62,17 @@ export const handler: Handler = async (event) => {
 
   } catch (error: any) {
     console.error('Error creating order:', error);
+    // Check if it's a Square API error
+    if (error instanceof ApiError) {
+      return {
+        statusCode: error.statusCode,
+        headers: corsHeaders,
+        body: JSON.stringify({
+          error: error.errors?.[0]?.detail || error.message
+        })
+      };
+    }
+
     return {
       statusCode: 500,
       headers: corsHeaders,
