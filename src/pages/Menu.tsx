@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Leaf, Flame, Wheat } from 'lucide-react';
+import { Leaf, Flame, Wheat, ShoppingBag } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import type { Database } from '../lib/database.types';
 
@@ -53,10 +54,17 @@ export default function Menu() {
       <div className="bg-[#eb1924] text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Menu</h1>
-          <p className="text-white/90 max-w-2xl mx-auto">
+          <p className="text-white/90 max-w-2xl mx-auto mb-8">
             Discover our fusion of African and Caribbean flavors, crafted with authentic
             spices and fresh ingredients.
           </p>
+          <Link
+            to="/order"
+            className="inline-flex items-center gap-2 bg-white text-[#eb1924] px-8 py-4 rounded-full hover:bg-white/90 transition-colors"
+          >
+            <ShoppingBag className="w-5 h-5" />
+            Order Now
+          </Link>
         </div>
       </div>
 
