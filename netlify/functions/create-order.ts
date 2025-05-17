@@ -1,5 +1,6 @@
 import { Handler } from '@netlify/functions';
-import { ApiError, Client, Environment } from 'square';
+import { Client, Environment } from 'square';
+import type { Order } from 'square';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -9,6 +10,7 @@ const corsHeaders = {
 interface OrderItem {
   menuItem: {
     square_variation_id: string;
+    name: string;
     price: number;
   };
   quantity: number;
@@ -42,7 +44,8 @@ export const handler: Handler = async (event) => {
       order: {
         locationId: process.env.SQUARE_LOCATION_ID!,
         lineItems: order.items.map((item: any) => ({
-          catalogVariationId: item.menuItem.square_variation_id,
+          catalog_object_id: item.menuItem.square_variation_id,
+          name: item.menuItem.name,
           quantity: item.quantity.toString(),
           basePriceMoney: {
             amount: Math.round(item.menuItem.price * 100), // Convert to cents
@@ -57,26 +60,19 @@ export const handler: Handler = async (event) => {
     return {
       statusCode: 200,
       headers: corsHeaders,
-      body: JSON.stringify(result.order)
+      body: JSON.stringify(result.order, (_, value) =>
+        typeof value === 'bigint' ? value.toString() : value
+      )
     };
 
   } catch (error: any) {
     console.error('Error creating order:', error);
-    // Check if it's a Square API error
-    if (error instanceof ApiError) {
-      return {
-        statusCode: error.statusCode,
-        headers: corsHeaders,
-        body: JSON.stringify({
-          error: error.errors?.[0]?.detail || error.message
-        })
-      };
-    }
-
     return {
       statusCode: 500,
       headers: corsHeaders,
-      body: JSON.stringify({ error: error.message })
+      body: JSON.stringify({ error: error.message }, (_, value) =>
+        typeof value === 'bigint' ? value.toString() : value
+      )
     };
   }
 };
