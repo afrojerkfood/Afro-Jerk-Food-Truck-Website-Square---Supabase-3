@@ -20,15 +20,7 @@ export default function PaymentForm({ amount, orderId, onSuccess, onError }: Pay
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Load Square Web Payments SDK
-    const script = document.createElement('script');
-    script.src = 'https://sandbox.web.squarecdn.com/v1/square.js';
-    script.onload = initializeSquare;
-    document.head.appendChild(script);
-
-    return () => {
-      document.head.removeChild(script);
-    };
+    initializeSquare();
   }, []);
 
   async function initializeSquare() {
@@ -38,7 +30,9 @@ export default function PaymentForm({ amount, orderId, onSuccess, onError }: Pay
     }
 
     try {
-      const payments = window.Square.payments(import.meta.env.VITE_SQUARE_ACCESS_TOKEN, import.meta.env.VITE_SQUARE_LOCATION_ID);
+      const payments = window.Square.payments(import.meta.env.VITE_SQUARE_ACCESS_TOKEN, {
+        applicationId: import.meta.env.VITE_SQUARE_APPLICATION_ID
+      });
       const card = await payments.card();
       await card.attach('#card-container');
       setCard(card);
