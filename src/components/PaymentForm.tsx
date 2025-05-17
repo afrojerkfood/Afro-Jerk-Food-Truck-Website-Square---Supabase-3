@@ -15,13 +15,31 @@ declare global {
   }
 }
 
-export default function PaymentForm({ amount, orderId, onSuccess, onError }: PaymentFormProps) {
+const PaymentForm = ({ amount, orderId, onSuccess, onError }: PaymentFormProps) => {
   const [card, setCard] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const applicationId = 'sandbox-sq0idb-G1yqU0DZ2g7Fgwd8prwbRw';
+  const locationId = 'LHYHR6Y7X33KQ';
 
   useEffect(() => {
-    initializeSquare();
-  }, []);
+    if (!applicationId || !locationId) {
+      console.error('Missing Square configuration:', { applicationId, locationId });
+      setError('Payment system configuration is incomplete. Please try again later.');
+      return;
+    }
+
+    // Load Square Web Payments SDK
+    const script = document.createElement('script');
+    script.src = 'https://sandbox.web.squarecdn.com/v1/square.js';
+    script.onload = initializeSquare;
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, [applicationId, locationId]);
 
   async function initializeSquare() {
     if (!window.Square) {
@@ -30,15 +48,20 @@ export default function PaymentForm({ amount, orderId, onSuccess, onError }: Pay
     }
 
     try {
-      const payments = window.Square.payments(import.meta.env.VITE_SQUARE_ACCESS_TOKEN, {
-        applicationId: import.meta.env.VITE_SQUARE_APPLICATION_ID
-      });
+      const payments = window.Square.payments(applicationId, locationId);
+
+      if (!payments) {
+        throw new Error('Failed to initialize Square payments');
+      }
+
       const card = await payments.card();
       await card.attach('#card-container');
       setCard(card);
     } catch (error) {
+      setError((error as Error).message);
       console.error('Error initializing Square:', error);
       onError(error as Error);
+      return;
     }
   }
 
@@ -46,6 +69,7 @@ export default function PaymentForm({ amount, orderId, onSuccess, onError }: Pay
     e.preventDefault();
     if (!card) {
       toast.error('Payment form not initialized');
+      setError('Payment system not ready. Please refresh and try again.');
       return;
     }
 
@@ -55,7 +79,11 @@ export default function PaymentForm({ amount, orderId, onSuccess, onError }: Pay
       const result = await card.tokenize();
       if (result.status === 'OK') {
         // Process payment with Square
-        const payment = await SquareService.processPayment(orderId, result.token, amount);
+        const payment = await SquareService.processPayment(
+          orderId,
+          result.token,
+          amount
+        );
         if (payment?.id) {
           onSuccess(payment.id);
         } else {
@@ -77,12 +105,15 @@ export default function PaymentForm({ amount, orderId, onSuccess, onError }: Pay
     <form onSubmit={handlePayment} className="space-y-6">
       <div className="bg-white p-6 rounded-xl border border-gray-200">
         <h3 className="text-lg font-bold mb-4">Payment Details</h3>
-        
-        {/* Card Input Container */}
-        <div 
-          id="card-container"
-          className="p-4 border border-gray-300 rounded-lg mb-4 min-h-[100px] focus-within:ring-2 focus-within:ring-[#eb1924] focus-within:border-transparent"
-        />
+
+        {error ? (
+          <p className="text-red-500 text-sm mb-4">{error}</p>
+        ) : (
+          <div 
+            id="card-container"
+            className="p-4 border border-gray-300 rounded-lg mb-4 min-h-[100px]"
+          />
+        )}
 
         {/* Total Amount */}
         <div className="flex justify-between items-center font-bold">
@@ -100,4 +131,6 @@ export default function PaymentForm({ amount, orderId, onSuccess, onError }: Pay
       </button>
     </form>
   );
-}
+};
+
+export default PaymentForm;
