@@ -20,7 +20,7 @@ const PaymentForm = ({ amount, orderId, onSuccess, onError }: PaymentFormProps) 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const applicationId = 'sandbox-sq0idb-G1yqU0DZ2g7Fgwd8prwbRw';
+  const applicationId = 'sq0idp-Xiwv2V-EchpPvA_lSLzLnw';
   const locationId = 'LHYHR6Y7X33KQ';
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const PaymentForm = ({ amount, orderId, onSuccess, onError }: PaymentFormProps) 
 
     // Load Square Web Payments SDK
     const script = document.createElement('script');
-    script.src = 'https://sandbox.web.squarecdn.com/v1/square.js';
+    script.src = 'https://web.squarecdn.com/v1/square.js'; // ✅ Production SDK URL
     script.onload = initializeSquare;
     document.head.appendChild(script);
 
