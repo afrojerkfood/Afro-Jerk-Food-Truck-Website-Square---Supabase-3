@@ -21,7 +21,7 @@ const PaymentForm = ({ amount, orderId, onSuccess, onError }: PaymentFormProps) 
   const [error, setError] = useState<string | null>(null);
 
   const applicationId = 'sq0idp-Xiwv2V-EchpPvA_lSLzLnw';
-  const locationId = 'LHYHR6Y7X33KQ';
+  const locationId = 'L3BNZHXZMEACP';
 
   useEffect(() => {
     if (!applicationId || !locationId) {
