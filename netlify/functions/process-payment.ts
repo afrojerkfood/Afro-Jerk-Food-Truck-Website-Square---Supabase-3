@@ -8,7 +8,7 @@ const corsHeaders = {
 
 const square = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
-  environment: Environment.Sandbox
+  environment: Environment.Production
 });
 
 export const handler: Handler = async (event) => {
