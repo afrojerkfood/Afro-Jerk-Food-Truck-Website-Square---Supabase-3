@@ -33,6 +33,7 @@ export default function Order() {
   const [showPayment, setShowPayment] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
   const [menuCategories] = useState(['signatures', 'vegetarian', 'sides', 'drinks', 'combos', 'dessert', 'extras']);
+  const [pickupDateTime, setPickupDateTime] = useState<Date | null>(null);
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     email: '',
@@ -197,17 +198,23 @@ export default function Order() {
     }
     
     try {
-      // Create order in database first
+      // Validate time format
       const parsedTime = parse(selectedTime, 'h:mm aa', new Date());
       if (!isValid(parsedTime)) {
         throw new Error('Invalid time format');
       }
+
+      // Validate date
+      if (!isValid(selectedDate)) {
+        throw new Error('Invalid pickup date');
+      }
+
       const time24 = format(parsedTime, 'HH:mm');
-      
-      const pickupDateTime = parseISO(`${format(selectedDate, 'yyyy-MM-dd')}T${time24}:00`);
+      const dateTime = parseISO(`${format(selectedDate, 'yyyy-MM-dd')}T${time24}:00`);
+      setPickupDateTime(dateTime);
       const totalAmount = calculateTotal();
 
-      // Create order in database
+      // Create order in Supabase first
       const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert({
@@ -216,7 +223,7 @@ export default function Order() {
           customer_phone: customerInfo.phone,
           location_id: selectedLocation.id,
           total_amount: totalAmount,
-          pickup_time: pickupDateTime.toISOString(),
+          pickup_time: dateTime.toISOString(),
           status: 'pending'
         })
         .select()
@@ -224,7 +231,7 @@ export default function Order() {
 
       if (orderError) throw orderError;
 
-      // Create order items
+      // Create order items in Supabase
       const orderItems = cart.map(item => ({
         order_id: order.id,
         menu_item_id: item.menuItem.id,
@@ -239,7 +246,7 @@ export default function Order() {
       if (itemsError) throw itemsError;
 
       // Create Square order
-      const squareOrder = await SquareService.createOrder({
+      const { squareOrderId } = await SquareService.createOrder({
         id: order.id,
         items: cart
       });
@@ -247,11 +254,13 @@ export default function Order() {
       // Update order with Square order ID
       await supabase
         .from('orders')
-        .update({ square_order_id: squareOrder.id })
+        .update({ 
+          square_order_id: squareOrderId
+        })
         .eq('id', order.id);
 
       // Show payment form
-      setOrderId(order.id);
+      setOrderId(squareOrderId);
       setShowPayment(true);
       setStep(4);
 
@@ -270,33 +279,39 @@ export default function Order() {
 
   const handlePaymentSuccess = async (paymentId: string) => {
     if (!orderId) return;
+    if (!pickupDateTime) {
+      console.error('Missing pickup date/time');
+      toast.error('Error processing order: Missing pickup time');
+      return;
+    }
 
     try {
-      // Update order with payment ID
+      // Get original order ID from Supabase
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .select('id')
+        .eq('square_order_id', orderId)
+        .single();
+
+      if (orderError) throw orderError;
+
+      // Update order with payment ID and status
       await supabase
         .from('orders')
         .update({ square_payment_id: paymentId })
-        .eq('id', orderId);
-
-      // Send confirmation email
-      await supabase.functions.invoke('send-order-email', {
-        body: {
-          order: {
-            id: orderId,
-            customer_name: customerInfo.name,
-            customer_email: customerInfo.email,
-            location_name: selectedLocation?.name,
-            items: cart,
-            total_amount: calculateTotal(),
-            pickup_time: selectedTime
-          }
-        }
-      });
+        .eq('id', orderData.id);
 
       // Navigate to confirmation page
       navigate('/order/confirmation', {
         state: {
-          order: { id: orderId, ...customerInfo, items: cart }
+          order: { 
+            id: orderId, 
+            ...customerInfo, 
+            items: cart,
+            pickup_time: pickupDateTime.toISOString(),
+            total_amount: calculateTotal(),
+            location_name: selectedLocation?.name 
+          } 
         }
       });
     } catch (error) {
