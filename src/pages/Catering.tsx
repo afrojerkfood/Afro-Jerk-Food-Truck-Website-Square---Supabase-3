@@ -11,6 +11,7 @@ interface MenuItem {
 }
 
 const MENU_ITEMS: MenuItem[] = [
+  { id: 'oxtail-tray', name: 'Oxtail Tray (Serves 10-15)', price: 299.00, minQuantity: 1 },
   { id: 'jollof-rice', name: 'Jollof Rice Pan (Serves 8-10)', price: 45.00, minQuantity: 2 },
   { id: 'jerk-chicken', name: 'Jerk Chicken Tray (24 pieces)', price: 65.00, minQuantity: 1 },
   { id: 'plantains', name: 'Fried Plantains Tray (Serves 15-20)', price: 35.00, minQuantity: 1 },
