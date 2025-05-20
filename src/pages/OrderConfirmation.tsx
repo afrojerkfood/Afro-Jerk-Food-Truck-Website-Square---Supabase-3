@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation, Link, Navigate } from 'react-router-dom';
 import { CheckCircle, Calendar, Clock, MapPin, Receipt } from 'lucide-react';
 import { format } from 'date-fns';
+import { calculateTax } from '../utils/tax';
 
 interface OrderConfirmationProps {
   state: {
@@ -79,6 +80,7 @@ export default function OrderConfirmation() {
               <div className="border-t pt-6">
                 <h2 className="font-bold mb-4">Order Summary</h2>
                 <div className="space-y-3">
+                  {/* Order Items */}
                   {order.items.map((item, index) => (
                     <div key={index} className="flex justify-between text-gray-600">
                       <div className="flex gap-2">
@@ -88,7 +90,21 @@ export default function OrderConfirmation() {
                      <span>${(item.menuItem.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
-                  <div className="border-t pt-3 flex justify-between font-bold">
+                  
+                  {/* Subtotal */}
+                  <div className="border-t pt-3 flex justify-between">
+                    <span>Subtotal</span>
+                    <span>${order.items.reduce((total, item) => total + (item.menuItem.price * item.quantity), 0).toFixed(2)}</span>
+                  </div>
+                  
+                  {/* Tax */}
+                  <div className="flex justify-between text-gray-600">
+                    <span>Sales Tax</span>
+                    <span>${calculateTax(order.items.reduce((total, item) => total + (item.menuItem.price * item.quantity), 0), order.location_name).toFixed(2)}</span>
+                  </div>
+                  
+                  {/* Total */}
+                  <div className="pt-3 flex justify-between font-bold">
                     <span>Total</span>
                    <span>${order.total_amount.toFixed(2)}</span>
                   </div>
