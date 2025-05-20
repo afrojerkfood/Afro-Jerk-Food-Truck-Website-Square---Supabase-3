@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Star, MapPin, Upload, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 import Schedule from '../components/Schedule';
 import { toast } from 'react-hot-toast';
 import type { Database } from '../lib/database.types';
@@ -40,30 +40,36 @@ export default function Locate() {
 
   async function fetchTodaySchedule() {
     try {
-      console.log('Fetching today\'s schedule...');
-      const today = new Date().toISOString().split('T')[0];
+      // Get today's date in local timezone
+      const today = format(new Date(), 'yyyy-MM-dd');
+      const now = new Date();
+      const currentTime = format(now, 'HH:mm:ss');
+
       const { data, error } = await supabase
         .from('schedules')
         .select(`
           *,
           location:locations(*)
         `)
-        .eq('date', today)
-        .order('start_time', { ascending: true })
-        .limit(1);
+        .eq('date', today);
 
       if (error) throw error;
       
-      // Handle the case where no schedule is found
-      if (!data || data.length === 0) {
-        console.log('No schedule found for today');
+      // Find current schedule
+      const currentSchedule = data?.find(schedule => {
+        const start = parse(schedule.start_time, 'HH:mm:ss', now);
+        const end = parse(schedule.end_time, 'HH:mm:ss', now);
+        const current = parse(currentTime, 'HH:mm:ss', now);
+        
+        return current >= start && current <= end;
+      });
+
+      if (!currentSchedule) {
         setCurrentSchedule(null);
         return;
       }
 
-      // Take the first schedule if multiple exist
-      console.log('Schedule data received:', data[0]);
-      setCurrentSchedule(data[0]);
+      setCurrentSchedule(currentSchedule);
       
     } catch (error) {
       console.error('Error fetching schedule:', error);
