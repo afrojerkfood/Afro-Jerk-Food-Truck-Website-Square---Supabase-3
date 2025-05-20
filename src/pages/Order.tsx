@@ -346,26 +346,28 @@ export default function Order() {
 
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-3xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="flex items-center">
-                <div className={`
-                  w-8 h-8 rounded-full flex items-center justify-center font-medium
-                  ${i === step ? 'bg-[#edba3a] text-white' : 
-                    i < step ? 'bg-[#01a952] text-white' : 
-                    'bg-gray-100 text-gray-400'}
-                `}>
-                  {i}
-                </div>
-                {i < 4 && (
-                  <div className={`
-                    w-24 h-1 mx-2
-                    ${i < step ? 'bg-[#01a952]' : 'bg-gray-100'}
-                  `} />
-                )}
-              </div>
-            ))}
-          </div>
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-between mb-8">
+  {[1, 2, 3, 4].map((i) => (
+    <div key={i} className="flex items-center">
+      <div className={`
+        w-8 h-8 rounded-full flex items-center justify-center font-medium
+        ${i === step ? 'bg-[#edba3a] text-white' : 
+          i < step ? 'bg-[#01a952] text-white' : 
+          'bg-gray-100 text-gray-400'}
+      `}>
+        {i}
+      </div>
+      {i < 4 && (
+        <div className={`
+          h-1 mx-2
+          ${i < step ? 'bg-[#01a952]' : 'bg-gray-100'}
+          w-12 sm:w-24
+        `} />
+      )}
+    </div>
+  ))}
+</div>
+
 
           {step === 1 && (
             <div className="space-y-8">
