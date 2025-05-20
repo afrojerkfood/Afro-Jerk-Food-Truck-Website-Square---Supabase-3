@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { format, parseISO, parse, addMinutes, isBefore, isEqual, isValid } from 'date-fns';
 import { Clock, Calendar, Users, MapPin, ChevronLeft, ChevronRight, ShoppingBag, Leaf, Flame, Wheat, Phone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { calculateTax } from '../utils/tax';
 import PaymentForm from '../components/PaymentForm';
 import { supabase } from '../lib/supabase';
 import { SquareService } from '../lib/square';
@@ -122,7 +123,9 @@ export default function Order() {
   };
 
   const calculateTotal = () => {
-    return cart.reduce((total, item) => total + (item.menuItem.price * item.quantity), 0);
+    const subtotal = cart.reduce((total, item) => total + (item.menuItem.price * item.quantity), 0);
+    const tax = calculateTax(subtotal, selectedLocation?.address || '');
+    return subtotal + tax;
   };
 
   const availableDates = useMemo(() => {
@@ -212,7 +215,9 @@ export default function Order() {
       const time24 = format(parsedTime, 'HH:mm');
       const dateTime = parseISO(`${format(selectedDate, 'yyyy-MM-dd')}T${time24}:00`);
       setPickupDateTime(dateTime);
-      const totalAmount = calculateTotal();
+      const subtotal = cart.reduce((total, item) => total + (item.menuItem.price * item.quantity), 0);
+      const tax = calculateTax(subtotal, selectedLocation.address);
+      const totalAmount = subtotal + tax;
 
       // Create order in Supabase first
       const { data: order, error: orderError } = await supabase
@@ -309,7 +314,7 @@ export default function Order() {
             ...customerInfo, 
             items: cart,
             pickup_time: pickupDateTime.toISOString(),
-            total_amount: calculateTotal(),
+            total_amount: totalAmount,
             location_name: selectedLocation?.name 
           } 
         }
@@ -613,7 +618,23 @@ export default function Order() {
                      <span>${(item.menuItem.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
-                  <div className="border-t pt-2 font-medium flex justify-between">
+                  {/* Subtotal */}
+                  <div className="border-t pt-3 flex justify-between">
+                    <span>Subtotal</span>
+                    <span>${cart.reduce((total, item) => total + (item.menuItem.price * item.quantity), 0).toFixed(2)}</span>
+                  </div>
+                  
+                  {/* Tax */}
+                  <div className="flex justify-between text-gray-600">
+                    <span>Sales Tax ({selectedLocation?.address.includes('Rock Hill') ? '8%' : '7.5%'})</span>
+                    <span>${calculateTax(
+                      cart.reduce((total, item) => total + (item.menuItem.price * item.quantity), 0),
+                      selectedLocation?.address || ''
+                    ).toFixed(2)}</span>
+                  </div>
+                  
+                  {/* Total */}
+                  <div className="pt-3 flex justify-between font-bold">
                     <span>Total</span>
                    <span>${calculateTotal().toFixed(2)}</span>
                   </div>
