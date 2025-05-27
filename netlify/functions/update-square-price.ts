@@ -6,6 +6,14 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Custom replacer for JSON.stringify to handle BigInt
+const jsonReplacer = (key: string, value: any) => {
+  if (typeof value === 'bigint') {
+    return value.toString();
+  }
+  return value;
+};
+
 const square = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
   environment: Environment.Production
@@ -60,7 +68,7 @@ export const handler: Handler = async (event) => {
         'Content-Type': 'application/json',
         ...corsHeaders
       },
-      body: JSON.stringify(result)
+      body: JSON.stringify(result, jsonReplacer)
     };
 
   } catch (error) {
@@ -71,7 +79,7 @@ export const handler: Handler = async (event) => {
         'Content-Type': 'application/json',
         ...corsHeaders
       },
-      body: JSON.stringify({ error: error.message })
+      body: JSON.stringify({ error: error.message }, jsonReplacer)
     };
   }
 };
