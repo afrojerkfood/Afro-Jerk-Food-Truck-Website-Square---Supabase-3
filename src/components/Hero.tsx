@@ -127,11 +127,11 @@ export default function Hero() {
       <FoodTruck />
       
       <div className="container mx-auto px-4 z-10 mt-8">
-        <div className="max-w-3xl">
+        <div className="max-w-2xl">
           <img 
             src="https://cnkalkntbjisvbpjtojk.supabase.co/storage/v1/object/public/media//afro%20jerk%20logo@0%20(1).5x"
             alt="Afro Jerk Logo"
-            className="w-64 h-auto mb-8 animate-fade-in"
+            className="w-48 max-w-xs h-auto mb-8 animate-fade-in"
           />
           
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
