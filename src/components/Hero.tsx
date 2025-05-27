@@ -84,7 +84,7 @@ export default function Hero() {
   }
 
   return (
-    <div className="relative min-h-[90vh] flex items-center pt-12">
+    <div className="relative min-h-[100vh] flex items-center pt-12">
       {SLIDESHOW_IMAGES.map((image, index) => (
         <div
           key={image.url}
@@ -103,7 +103,7 @@ export default function Hero() {
       ))}
       
       {/* Slideshow Navigation Dots */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-5 flex gap-2">
         {SLIDESHOW_IMAGES.map((_, index) => (
           <button
             key={index}
