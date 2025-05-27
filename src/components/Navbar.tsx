@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, MapPin } from 'lucide-react';
+import AnnouncementBanner from './AnnouncementBanner';
 
 const MENU_ITEMS = [
  { path: '/order', label: 'Order Now' },
@@ -17,6 +18,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed w-full bg-white/90 backdrop-blur-sm z-50 shadow-sm">
+      <AnnouncementBanner />
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center">
