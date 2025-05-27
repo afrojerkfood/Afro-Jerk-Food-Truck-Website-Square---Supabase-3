@@ -6,6 +6,7 @@ import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } 
 import { CSS } from '@dnd-kit/utilities';
 import { toast, Toaster } from 'react-hot-toast';
 import { supabase } from '../../lib/supabase';
+import { SquareService } from '../../lib/square';
 import MediaUpload from '../../components/MediaUpload';
 import type { Database } from '../../lib/database.types';
 
@@ -194,7 +195,22 @@ export default function Menu() {
           .eq('id', editingItem.id);
 
         if (error) throw error;
-        toast.success('Menu item updated successfully');
+
+        // Update price in Square if square_variation_id exists
+        if (editingItem.square_variation_id && formData.price !== editingItem.price) {
+          const result = await SquareService.updatePrice(
+            editingItem.square_variation_id,
+            formData.price || 0
+          );
+          
+          if (!result.success) {
+            toast.error(`Menu item updated but Square sync failed: ${result.error}`);
+          } else {
+            toast.success('Menu item and Square price updated successfully');
+          }
+        } else {
+          toast.success('Menu item updated successfully');
+        }
         fetchMenuItems();
         setIsModalOpen(false);
         setEditingItem(null);
