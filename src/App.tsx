@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import AnnouncementBanner from './components/AnnouncementBanner';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import About from './components/About';
@@ -50,6 +51,7 @@ function App() {
     <BrowserRouter>
       <ScrollToTop/>
       <div className="min-h-screen">
+        <AnnouncementBanner />
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
