@@ -2,6 +2,11 @@ import type { Database } from './database.types';
 
 type MenuItem = Database['public']['Tables']['menu_items']['Row'];
 
+interface SquareUpdatePriceResponse {
+  success: boolean;
+  error?: string;
+}
+
 export class SquareService {
   /**
    * Create order in Square
@@ -50,6 +55,32 @@ export class SquareService {
     } catch (error) {
       console.error('Error processing payment:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Update price in Square
+   */
+  static async updatePrice(squareVariationId: string, price: number): Promise<SquareUpdatePriceResponse> {
+    try {
+      const response = await fetch('/.netlify/functions/update-square-price', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ squareVariationId, price })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to update price in Square');
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error('Error updating Square price:', error);
+      return {
+        success: false,
+        error: error.message || 'Failed to update price in Square'
+      };
     }
   }
 }
