@@ -27,18 +27,31 @@ export const handler: Handler = async (event) => {
       throw new Error('Missing required fields');
     }
 
-    const { result } = await square.catalogApi.upsertCatalogObject({
-      idempotencyKey: `${squareVariationId}_${Date.now()}`,
-      object: {
-        type: 'ITEM_VARIATION',
-        id: squareVariationId,
-        itemVariationData: {
-          priceMoney: {
-            amount: BigInt(Math.round(price * 100)),
-            currency: 'USD'
-          }
+    // First retrieve the existing item variation
+    const { result: { object: existingVariation } } = await square.catalogApi.retrieveCatalogObject(
+      squareVariationId
+    );
+
+    if (!existingVariation) {
+      throw new Error('Item variation not found');
+    }
+
+    // Update only the price while preserving other data
+    const updatedVariation = {
+      ...existingVariation,
+      itemVariationData: {
+        ...existingVariation.itemVariationData,
+        priceMoney: {
+          amount: Math.round(price * 100),
+          currency: 'USD'
         }
       }
+    };
+
+    // Update the item variation
+    const { result } = await square.catalogApi.upsertCatalogObject({
+      idempotencyKey: `${squareVariationId}_${Date.now()}`,
+      object: updatedVariation
     });
 
     return {
