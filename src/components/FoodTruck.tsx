@@ -3,7 +3,7 @@ import { Truck } from 'lucide-react';
 
 export default function FoodTruck() {
   return (
-    <div className="absolute bottom-0 left-0 w-full overflow-hidden pointer-events-none">
+    <div className="absolute -bottom-1 left-0 w-full overflow-hidden pointer-events-none">
       <div className="animate-truck">
         <div className="flex items-center gap-3 text-white/80">
         <div className="w-4 h-4 rounded-full bg-white/10" />
