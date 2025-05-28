@@ -17,7 +17,6 @@ const SOCIAL_LINKS = [
 ];
 
 const CONTACT_INFO = {
-  address: '101 N Tryon St, Charlotte, NC',
   phone: '+1 (803) 999-7978',
   email: 'afrojerkfood@gmail.com',
 };
@@ -60,17 +59,7 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-bold mb-4">Contact</h3>
             <ul className="space-y-2">
-              <li>
-                <a 
-                  href={`https://maps.google.com/?q=${CONTACT_INFO.address}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm hover:text-white transition-colors"
-                >
-                  <MapPin className="w-4 h-4" />
-                  {CONTACT_INFO.address}
-                </a>
-              </li>
+      
               <li>
                 <a 
                   href={`tel:${CONTACT_INFO.phone}`}
