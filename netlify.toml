@@ -32,6 +32,12 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
+[[redirects]]
+from = "https://afrojerktruck.com/*"
+to = "https://afrojerkfood.com/:splat"
+status = 301
+force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
