@@ -35,7 +35,7 @@ export default function Footer() {
               className="h-36 w-auto"
             />
             <p className="text-sm mt-4">
-              Bringing the vibrant flavors of Africa and the Caribbean to the streets of Charlotte.
+              Bringing the vibrant flavors of Africa and the Caribbean to the Carolinas.
             </p>
           </div>
 
