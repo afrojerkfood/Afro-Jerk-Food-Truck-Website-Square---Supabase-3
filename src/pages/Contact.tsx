@@ -114,7 +114,7 @@ export default function Contact() {
               </div>
 
               {/* Locations */}
-              <div className="space-y-4">
+{/*               <div className="space-y-4">
                 <h3 className="text-lg font-medium">Our Locations</h3>
                 {CONTACT_INFO.locations.map((location) => (
                   <div 
@@ -129,7 +129,7 @@ export default function Contact() {
                     </div>
                   </div>
                 ))}
-              </div>
+              </div> */}
 
               {/* Social Links */}
               <div>
