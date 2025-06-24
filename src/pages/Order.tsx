@@ -346,7 +346,7 @@ export default function Order() {
 
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-3xl mx-auto">
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-between mb-8">
+          <div className="flex items-center justify-center gap-4 sm:justify-between mb-8">
   {[1, 2, 3, 4].map((i) => (
     <div key={i} className="flex items-center">
       <div className={`
