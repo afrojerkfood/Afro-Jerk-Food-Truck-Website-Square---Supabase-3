@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Send, Instagram, Facebook, Twitter } from 'lucide-react';
 
 const CONTACT_INFO = {
-  phone: '+1 (803) 999-7978',
+  phone: '+1 (803) 762-0445',
   email: 'afrojerkfood@gmail.com',
   social: {
     instagram: 'https://www.instagram.com/afrojerkfood/',
