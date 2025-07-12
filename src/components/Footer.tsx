@@ -17,7 +17,7 @@ const SOCIAL_LINKS = [
 ];
 
 const CONTACT_INFO = {
-  phone: '+1 (803) 999-7978',
+  phone: '+1 (803) 762-0445',
   email: 'afrojerkfood@gmail.com',
 };
 
