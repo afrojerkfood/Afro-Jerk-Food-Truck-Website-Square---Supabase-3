@@ -47,7 +47,7 @@ export default function InteractiveLogo() {
     <div className="max-w-2xl mx-auto">
       <div className="relative aspect-square bg-white/50 backdrop-blur-sm rounded-full p-4 md:p-8 shadow-lg transition-all duration-300">
         <img 
-          src="https://cnkalkntbjisvbpjtojk.supabase.co/storage/v1/object/public/media//afro%20jerk%20logo@0%20(1).5x"
+          src="https://ljrrjebhknseythijqku.supabase.co/storage/v1/object/public/media/AfroJerk%20Supabase%20Transfer%20Pics/afro%20jerk%20logo@0.5x.png"
           alt="Afro Jerk Logo"
           className="w-full h-full object-contain"
         />
