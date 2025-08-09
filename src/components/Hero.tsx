@@ -7,19 +7,19 @@ import FoodTruck from './FoodTruck';
 
 const SLIDESHOW_IMAGES = [
   {
-    url: 'https://cnkalkntbjisvbpjtojk.supabase.co/storage/v1/object/public/media//oxtail-stew-feature-1200x1200-1.jpg',
+    url: 'https://ljrrjebhknseythijqku.supabase.co/storage/v1/object/public/media/AfroJerk%20Supabase%20Transfer%20Pics/oxtail-stew-feature-1200x1200-1.jpg',
     caption: 'Ox Tail'
   },
   {
-    url: 'https://cnkalkntbjisvbpjtojk.supabase.co/storage/v1/object/public/media//Curry%20Chicken%20&%20Rice.jpg',
+    url: 'https://ljrrjebhknseythijqku.supabase.co/storage/v1/object/public/media/AfroJerk%20Supabase%20Transfer%20Pics/Curry%20Chicken%20&%20Rice.jpg',
     caption: 'Curry Chicken and Rice'
   },
   {
-    url: 'https://cnkalkntbjisvbpjtojk.supabase.co/storage/v1/object/public/media//fried-plantains-msn-1.jpg',
+    url: 'https://ljrrjebhknseythijqku.supabase.co/storage/v1/object/public/media/AfroJerk%20Supabase%20Transfer%20Pics/fried-plantains-msn-1.jpg',
     caption: 'Plantains'
   },
    {
-      url: '  https://cnkalkntbjisvbpjtojk.supabase.co/storage/v1/object/public/media//Jerk%20Chicken%20&%20Rice.jpg',
+      url: 'https://ljrrjebhknseythijqku.supabase.co/storage/v1/object/public/media/AfroJerk%20Supabase%20Transfer%20Pics/Jerk%20Chicken%20&%20Rice.jpg',
       caption: 'Jerk Chicken and Rice'
     }
 
@@ -129,7 +129,7 @@ export default function Hero() {
       <div className="container mx-auto px-4 z-10 mt-8">
         <div className="max-w-2xl">
           <img 
-            src="https://cnkalkntbjisvbpjtojk.supabase.co/storage/v1/object/public/media//afro%20jerk%20logo@0%20(1).5x"
+            src="https://ljrrjebhknseythijqku.supabase.co/storage/v1/object/public/media/AfroJerk%20Supabase%20Transfer%20Pics/afro%20jerk%20logo@0.5x.png"
             alt="Afro Jerk Logo"
             className="w-48 max-w-xs h-auto mb-8 animate-fade-in"
           />
