@@ -23,7 +23,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center">
             <img 
-              src="https://cnkalkntbjisvbpjtojk.supabase.co/storage/v1/object/public/media//favicon.png"
+              src="https://ljrrjebhknseythijqku.supabase.co/storage/v1/object/public/media/AfroJerk%20Supabase%20Transfer%20Pics/afro%20jerk%20logo@0.5x.png"
               alt="Afro Jerk Food Truck Logo"
               className="h-12 w-auto"
             />
