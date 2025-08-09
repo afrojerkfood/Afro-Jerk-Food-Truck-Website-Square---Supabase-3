@@ -30,7 +30,7 @@ export default function AdminLayout() {
         <div className="flex flex-col h-full">
           <Link to="/" className="flex items-center p-4 border-b">
             <img 
-              src="https://cnkalkntbjisvbpjtojk.supabase.co/storage/v1/object/public/media//afro%20jerk%20logo@0.5x.png"
+              src="https://ljrrjebhknseythijqku.supabase.co/storage/v1/object/public/media/AfroJerk%20Supabase%20Transfer%20Pics/afro%20jerk%20logo@0.5x.png"
               alt="Afro Jerk Logo"
               className="h-8 w-auto"
             />
@@ -77,7 +77,7 @@ export default function AdminLayout() {
         <div className="flex items-center justify-between p-4">
           <Link className="flex items-center" to="/">
             <img 
-              src="https://cnkalkntbjisvbpjtojk.supabase.co/storage/v1/object/public/media//afro%20jerk%20logo@0.5x.png"
+              src="https://ljrrjebhknseythijqku.supabase.co/storage/v1/object/public/media/AfroJerk%20Supabase%20Transfer%20Pics/afro%20jerk%20logo@0.5x.png"
               alt="Afro Jerk Logo"
               className="h-8 w-auto"
             />
