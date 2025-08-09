@@ -12,7 +12,7 @@ export default function FoodTruck() {
         {/* <Truck className="w-16 h-16" />
  */}
           <img 
-          src="https://cnkalkntbjisvbpjtojk.supabase.co/storage/v1/object/public/media//truckAsset%201.svg"
+          src="https://ljrrjebhknseythijqku.supabase.co/storage/v1/object/public/media/AfroJerk%20Supabase%20Transfer%20Pics/truckAsset%201.svg"
           alt="Food Truck"
           className="w-32 h-20"
         />
