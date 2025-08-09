@@ -28,7 +28,7 @@ export default function Login() {
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <img 
-            src="https://cnkalkntbjisvbpjtojk.supabase.co/storage/v1/object/public/media//afro%20jerk%20logo@0.5x.png"
+            src="https://ljrrjebhknseythijqku.supabase.co/storage/v1/object/public/media/AfroJerk%20Supabase%20Transfer%20Pics/afro%20jerk%20logo@0.5x.png"
             alt="Afro Jerk Logo"
             className="h-16 w-auto mx-auto mb-4"
           />
