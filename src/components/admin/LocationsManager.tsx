@@ -25,42 +25,6 @@ export default function LocationsManager() {
     }
   }, []);
 
-  const geocodeAddress = async (address: string) => {
-    if (!geocoder.current) return;
-
-    try {
-      const result = await geocoder.current.geocode({ address });
-      
-      if (result.results[0]) {
-        const { lat, lng } = result.results[0].geometry.location;
-        setFormData(prev => ({
-          ...prev,
-          lat: lat(),
-          lng: lng()
-        }));
-      }
-    } catch (error) {
-      console.error('Geocoding error:', error);
-      toast.error('Failed to get coordinates for address');
-    }
-  };
-
-  const handleAddressChange = (address: string) => {
-    setFormData(prev => ({ ...prev, address }));
-    
-    // Clear existing timeout
-    if (addressDebounceTimeout.current) {
-      clearTimeout(addressDebounceTimeout.current);
-    }
-    
-    // Set new timeout to geocode after typing stops
-    addressDebounceTimeout.current = setTimeout(() => {
-      if (address.trim()) {
-        geocodeAddress(address);
-      }
-    }, 1000);
-  };
-
   async function fetchLocations() {
     try {
       const { data, error } = await supabase
@@ -86,15 +50,33 @@ export default function LocationsManager() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.address || !formData.lat || !formData.lng) {
+    if (!formData.name || !formData.address) {
       toast.error('Please fill in all required fields');
       return;
+    }
+
+    // Auto-geocode the address to get coordinates
+    let coordinates = { lat: 0, lng: 0 };
+    if (geocoder.current && formData.address) {
+      try {
+        const result = await geocoder.current.geocode({ address: formData.address });
+        if (result.results[0]) {
+          const { lat, lng } = result.results[0].geometry.location;
+          coordinates = { lat: lat(), lng: lng() };
+        }
+      } catch (error) {
+        console.error('Geocoding error:', error);
+        toast.error('Failed to get coordinates for address. Please try again.');
+        return;
+      }
     }
 
     if (editingLocation) {
       try {
         const updates = {
           ...formData,
+          lat: coordinates.lat,
+          lng: coordinates.lng,
           updated_at: new Date().toISOString()
         };
 
@@ -115,6 +97,8 @@ export default function LocationsManager() {
       try {
         const newLocation = {
           ...formData,
+          lat: coordinates.lat,
+          lng: coordinates.lng,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         };
@@ -243,9 +227,7 @@ export default function LocationsManager() {
                   <MapPin className="w-4 h-4 mt-1" />
                   <p className="text-sm">{location.address}</p>
                 </div>
-                <div className="text-sm text-gray-500 mt-2">
-                  Coordinates: {location.lat}, {location.lng}
-                </div>
+               
               </div>
             </div>
           ))
@@ -289,42 +271,10 @@ export default function LocationsManager() {
                 <input
                   type="text"
                   value={formData.address || ''}
-                  onChange={(e) => handleAddressChange(e.target.value)}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
                   required
                 />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Latitude
-                  </label>
-                  <input
-                    type="number"
-                    step="any"
-                    value={formData.lat || ''}
-                    onChange={(e) => setFormData({ ...formData, lat: parseFloat(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
-                    required
-                    placeholder="Updating..."
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Longitude
-                  </label>
-                  <input
-                    type="number"
-                    step="any"
-                    value={formData.lng || ''}
-                    onChange={(e) => setFormData({ ...formData, lng: parseFloat(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
-                    required
-                    placeholder="Updating..."
-                  />
-                </div>
               </div>
 
               <div>
