@@ -201,7 +201,7 @@ export default function LocationsManager() {
             >
               <div className="h-36 md:h-48 relative overflow-hidden">
                 <img
-                  src={location.image_url || 'https://images.unsplash.com/photo-1565123409695-7b5ef63a2efb?auto=format&fit=crop&q=80'}
+                  src={location.image_url || 'https://ljrrjebhknseythijqku.supabase.co/storage/v1/object/public/media/Afro%20jerk%20food%20truck.jpg'}
                   alt={location.name}
                   className="w-full h-full object-cover"
                 />
