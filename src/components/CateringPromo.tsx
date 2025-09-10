@@ -15,7 +15,7 @@ export default function CateringPromo() {
               {/* Image */}
               <div className="w-full md:w-1/2">
                 <img
-                  src="https://images.unsplash.com/photo-1565123409695-7b5ef63a2efb?auto=format&fit=crop&q=80"
+                  src="https://ljrrjebhknseythijqku.supabase.co/storage/v1/object/public/media/Afro%20jerk%20food%20truck.jpg"
                   alt="Catering Setup"
                   className="w-full h-64 object-cover rounded-xl shadow-md"
                 />
